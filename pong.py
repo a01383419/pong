@@ -41,9 +41,11 @@ def draw():
     global wall_direction, wall
     # Draw game and move pong ball.
     clear()
-    # Draw the left and right walls
+    # Draw the walls
     rectangle(-215, -215, 10, 430)  # Left wall
     rectangle(205, -215, 10, 430)   # Right wall
+    rectangle(-215, 205, 430, 10)   # Top wall
+    rectangle(-215, -215, 430, 10)  # Bottom wall
     rectangle(wall.x, wall.y, 10, 70)  # Middle wall
     
     # Draw the paddles
@@ -94,12 +96,12 @@ def draw():
         aim.x = -aim.x
 
     # Move the middle wall up and down
-    if wall.y < -185 or wall.y > 185:
+    if wall.y < -150 or wall.y > 150:
         wall_direction *= -1  # Reverse the movement direction
     wall.y += wall_direction * 2  # Adjust the speed of the wall
 
     # Display scores
-    goto(0, 200)
+    goto(0, 220)
     write(f"Player 1: {stateS[1]}   Player 2: {stateS[2]}", align="center", font=("Roboto", 14, "bold"))
 
     ontimer(draw, 50)
