@@ -8,6 +8,8 @@ def value():
     """Randomly generate value between (-5, -3) or (3, 5)."""
     return (3 + random() * 2) * choice([1, -1])
 
+wall = vector(0, 0)
+wall_direction = 1  # Direction of the wall's movement
 ball = vector(0, 0)
 aim = vector(value(), value())
 stateS = {1: 0, 2: 0}  # Dictionary to hold scores for players 1 and 2
@@ -36,11 +38,13 @@ def rectangle(x, y, width, height):
 
 
 def draw():
-    """Draw game and move pong ball."""
+    global wall_direction, wall
+    # Draw game and move pong ball.
     clear()
     # Draw the left and right walls
     rectangle(-215, -215, 10, 430)  # Left wall
     rectangle(205, -215, 10, 430)   # Right wall
+    rectangle(wall.x, wall.y, 10, 70)  # Middle wall
     
     # Draw the paddles
     rectangle(-200, stateP[1], 10, 50)
@@ -85,6 +89,15 @@ def draw():
             stateS[1] += 1
             aim.x = -aim.x
 
+    # Check collision with the middle wall
+    if (wall.x - 5 < x < wall.x + 5) and (wall.y - 35 < y < wall.y + 35):
+        aim.x = -aim.x
+
+    # Move the middle wall up and down
+    if wall.y < -185 or wall.y > 185:
+        wall_direction *= -1  # Reverse the movement direction
+    wall.y += wall_direction * 2  # Adjust the speed of the wall
+
     # Display scores
     goto(0, 200)
     write(f"Player 1: {stateS[1]}   Player 2: {stateS[2]}", align="center", font=("Roboto", 14, "bold"))
@@ -92,8 +105,8 @@ def draw():
     ontimer(draw, 50)
 
 
-setup(440, 440, 370, 0)  # Increased window size
-title("Pong")  # Set window title
+setup(440, 440, 370, 0)
+title("Pong")
 hideturtle()
 tracer(False)
 listen()
