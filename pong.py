@@ -109,6 +109,7 @@ def increase_speed():
     global current_speed
     current_speed += speed_increment
 
+title("PONG2 - EQ10")
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
