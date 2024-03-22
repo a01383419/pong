@@ -19,7 +19,7 @@ balls = [new_ball()]
 state = {1: 0, 2: 0}
 score = {1: 0, 2: 0}  # Add a score counter for each player
 
-speed_increment = .5  # Incremental speed increase over time
+speed_increment = .3  # Incremental speed increase over time
 current_speed = 1.0  # Initial speed
 
 def move(player, change):
@@ -82,8 +82,26 @@ def draw():
 
     draw_score()  # Update the score
     update()
-    ontimer(draw, 50)  # Recursive call to keep updating the game
 
+    # Check if any player has reached 10 points
+    if score[1] >= 10 or score[2] >= 10:
+        end_game()  # Call the function to end the game
+    else:
+        ontimer(draw, 50)  # Recursive call to keep updating the game
+
+def end_game():
+    """End the game."""
+    clear()
+    up()
+    goto(0, 0)
+    color('white')
+    if score[1] > score[2]:
+        write("Player 1 wins", align="center", font=("Arial", 30, "normal"))
+    else:
+        write("Player 2 wins", align="center", font=("Arial", 30, "normal"))
+    update()
+    done()
+    
 def draw_score():
     """Draw the score for each player."""
     up()
@@ -109,7 +127,8 @@ def increase_speed():
     global current_speed
     current_speed += speed_increment
 
-title("PONG2 - EQ10")
+
+title("Pong Game")
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
