@@ -88,7 +88,17 @@ def draw():
         end_game()  # Call the function to end the game
     else:
         ontimer(draw, 50)  # Recursive call to keep updating the game
-        
+
+def end_game():
+    """End the game."""
+    clear()
+    up()
+    goto(0, 0)
+    color('white')
+    write("Game Over", align="center", font=("Arial", 30, "normal"))
+    update()
+    done()
+    
 def draw_score():
     """Draw the score for each player."""
     up()
