@@ -43,6 +43,18 @@ Usa tu paleta para evitar que la pelota golpee las paredes detrás de ti.
 Rebota la pelota de regreso hacia el lado de tu oponente para marcar puntos.
 El juego termina cuando un jugador alcanza el límite de puntuación especificado.
 
+## **Cambios del juego original:**
+
+**- Adición de un segundo jugador:** El juego originalmente estaba diseñado para ser jugado por un solo jugador contra la computadora. En esta versión modificada, se ha agregado la capacidad de jugar contra otro jugador humano, lo que agrega una dimensión competitiva y social al juego.
+
+**- Velocidad dinámica de la pelota:** En el juego original, la velocidad de la pelota puede ser constante o predefinida. En esta versión modificada, la velocidad de la pelota aumenta gradualmente con el tiempo, lo que aumenta la dificultad y la emoción del juego a medida que avanza.
+
+**- Sistema de puntuación:** Se ha agregado un sistema de puntuación para llevar un registro de los puntos obtenidos por cada jugador. Además, se ha implementado un mecanismo para reiniciar la pelota y actualizar la puntuación cuando la pelota toca la pared sin ser interceptada por la paleta del jugador.
+
+**- Adición de bolas adicionales:** Se ha agregado la capacidad de agregar más bolas al juego presionando la barra espaciadora. Esto agrega una capa adicional de complejidad y desafío al juego, ya que los jugadores deben administrar múltiples bolas simultáneamente.
+
+**- Interfaz gráfica mejorada:** Aunque el juego sigue utilizando el módulo Turtle de Python para la representación gráfica, se han realizado mejoras en la presentación visual y la legibilidad del juego, como la incorporación de colores y la adaptación de los elementos visuales a las pantallas modernas.
+
 
 
 **¡Disfruta del Juego!**
