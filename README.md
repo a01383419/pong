@@ -41,7 +41,7 @@ Agregar bolas adicionales: Presiona la barra espaciadora.
 
 Usa tu paleta para evitar que la pelota golpee las paredes detrás de ti.
 Rebota la pelota de regreso hacia el lado de tu oponente para marcar puntos.
-El juego termina cuando un jugador alcanza el límite de puntuación especificado (no implementado en esta versión).
+El juego termina cuando un jugador alcanza el límite de puntuación especificado.
 
 
 
