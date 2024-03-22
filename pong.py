@@ -19,7 +19,7 @@ balls = [new_ball()]
 state = {1: 0, 2: 0}
 score = {1: 0, 2: 0}  # Add a score counter for each player
 
-speed_increment = .5  # Incremental speed increase over time
+speed_increment = .3  # Incremental speed increase over time
 current_speed = 1.0  # Initial speed
 
 def move(player, change):
