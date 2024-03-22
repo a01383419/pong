@@ -1,3 +1,5 @@
+# Documentación en el readme
+
 from random import choice, random
 from turtle import *
 from freegames import vector
