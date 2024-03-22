@@ -113,6 +113,8 @@ def reset_ball(ball, aim):
 def toggle_pause():  # Create a function to toggle the pause state
     global is_paused
     is_paused = not is_paused
+    if not is_paused:
+        draw()  # Call draw() when the game is resumed
 
 # Function to add a new ball
 def add_ball():
