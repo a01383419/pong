@@ -1,6 +1,5 @@
 from random import choice, random
 from turtle import *
-
 from freegames import vector
 
 # Set the background color to black
@@ -18,9 +17,9 @@ def new_ball():
 balls = [new_ball()]
 state = {1: 0, 2: 0}
 score = {1: 0, 2: 0}  # Add a score counter for each player
-
 speed_increment = .3  # Incremental speed increase over time
 current_speed = 1.0  # Initial speed
+is_paused = False
 
 def move(player, change):
     """Move player position by change."""
@@ -42,52 +41,45 @@ def rectangle(x, y, width, height):
 def draw():
     """Draw game and move pong balls."""
     global current_speed
-
-    clear()
-
-    # Draw players with white color
-    color('white')
-    rectangle(-200, state[1], 10, 50)
-    rectangle(190, state[2], 10, 50)
-
-    # Draw the balls
-    for ball, aim in balls:
-        up()
-        goto(ball.x, ball.y)
-        dot(10, "white")
-
-        # Move the ball
-        ball.move(aim * current_speed)  # Multiply aim by current speed
-        x = ball.x
-        y = ball.y
-
-        # Check if ball touches the wall and bounce
-        if y < -200 or y > 200:
-            aim.y = -aim.y
-
-        # Check if ball touches the left wall
-        if x < -185:
-            if state[1] <= y <= state[1] + 50:
-                aim.x = -aim.x
-            else:
-                score[2] += 1  # Update player 2 score
-                reset_ball(ball, aim)  # Reset ball position and direction
-        # Check if ball touches the right wall
-        if x > 185:
-            if state[2] <= y <= state[2] + 50:
-                aim.x = -aim.x
-            else:
-                score[1] += 1  # Update player 1 score
-                reset_ball(ball, aim)  # Reset ball position and direction
-
-    draw_score()  # Update the score
-    update()
-
-    # Check if any player has reached 10 points
-    if score[1] >= 10 or score[2] >= 10:
-        end_game()  # Call the function to end the game
-    else:
-        ontimer(draw, 50)  # Recursive call to keep updating the game
+    if not is_paused:  # Only draw and move if not paused
+        clear()
+        # Draw players with white color
+        color('white')
+        rectangle(-200, state[1], 10, 50)
+        rectangle(190, state[2], 10, 50)
+        # Draw the balls
+        for ball, aim in balls:
+            up()
+            goto(ball.x, ball.y)
+            dot(10, "white")
+            # Move the ball
+            ball.move(aim * current_speed)  # Multiply aim by current speed
+            x = ball.x
+            y = ball.y
+            # Check if ball touches the wall and bounce
+            if y < -200 or y > 200:
+                aim.y = -aim.y
+            # Check if ball touches the left wall
+            if x < -185:
+                if state[1] <= y <= state[1] + 50:
+                    aim.x = -aim.x
+                else:
+                    score[2] += 1  # Update player 2 score
+                    reset_ball(ball, aim)  # Reset ball position and direction
+            # Check if ball touches the right wall
+            if x > 185:
+                if state[2] <= y <= state[2] + 50:
+                    aim.x = -aim.x
+                else:
+                    score[1] += 1  # Update player 1 score
+                    reset_ball(ball, aim)  # Reset ball position and direction
+        draw_score()  # Update the score
+        update()
+        # Check if any player has reached 10 points
+        if score[1] >= 10 or score[2] >= 10:
+            end_game()  # Call the function to end the game
+        else:
+            ontimer(draw, 50)  # Recursive call to keep updating the game
 
 def end_game():
     """End the game."""
@@ -101,7 +93,7 @@ def end_game():
         write("Player 2 wins", align="center", font=("Arial", 30, "normal"))
     update()
     done()
-    
+
 def draw_score():
     """Draw the score for each player."""
     up()
@@ -118,6 +110,12 @@ def reset_ball(ball, aim):
     ball.x, ball.y = 0, 0
     aim.x, aim.y = value(), value()
 
+def toggle_pause():  # Create a function to toggle the pause state
+    global is_paused
+    is_paused = not is_paused
+    if not is_paused:
+        draw()  # Call draw() when the game is resumed
+
 # Function to add a new ball
 def add_ball():
     balls.append(new_ball())
@@ -127,8 +125,7 @@ def increase_speed():
     global current_speed
     current_speed += speed_increment
 
-
-title("Pong Game")
+title("PONG2 - EQ10")
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
@@ -137,7 +134,8 @@ onkey(lambda: move(1, 20), 'w')
 onkey(lambda: move(1, -20), 's')
 onkey(lambda: move(2, 20), 'i')
 onkey(lambda: move(2, -20), 'k')
-onkey(add_ball, 'space')  # Press spacebar to add a new ball
+onkey(toggle_pause, 'p')  # Use 'p' key to pause the game
+onkey(add_ball, 'space')  # Use 'space' key to add a new ball
 draw()
 ontimer(increase_speed, 5000)  # Increase speed every 5 seconds
 done()
