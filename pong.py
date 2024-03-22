@@ -3,25 +3,28 @@ from turtle import *
 
 from freegames import vector
 
-# Define global variables
+# Set the background color to black
+bgcolor('black')
+
 def value():
     """Randomly generate value between (-5, -3) or (3, 5)."""
     return (3 + random() * 2) * choice([1, -1])
 
-wall = vector(0, 0)
-wall_direction = 1  # Direction of the wall's movement
-ball = vector(0, 0)
-aim = vector(value(), value())
-stateS = {1: 0, 2: 0}  # Dictionary to hold scores for players 1 and 2
-stateP = {1: 0, 2: 0}  # Dictionary to hold paddle positions for players 1 and 2
+# Function to create a new ball
+def new_ball():
+    return vector(0, 0), vector(value(), value())
 
+# Initial setup with one ball
+balls = [new_ball()]
+state = {1: 0, 2: 0}
+score = {1: 0, 2: 0}  # Add a score counter for each player
+
+speed_increment = .5  # Incremental speed increase over time
+current_speed = 1.0  # Initial speed
 
 def move(player, change):
     """Move player position by change."""
-    # Move the player only if it won't go out of bounds
-    if -190 <= stateP[player] + change <= 140:
-        stateP[player] += change
-
+    state[player] += change
 
 def rectangle(x, y, width, height):
     """Draw rectangle at (x, y) with given width and height."""
@@ -36,79 +39,77 @@ def rectangle(x, y, width, height):
         left(90)
     end_fill()
 
-
 def draw():
-    global wall_direction, wall
-    # Draw game and move pong ball.
+    """Draw game and move pong balls."""
+    global current_speed
+
     clear()
-    # Draw the walls
-    rectangle(-215, -215, 10, 430)  # Left wall
-    rectangle(205, -215, 10, 430)   # Right wall
-    rectangle(-215, 205, 430, 10)   # Top wall
-    rectangle(-215, -215, 430, 10)  # Bottom wall
-    rectangle(wall.x, wall.y, 10, 70)  # Middle wall
-    
-    # Draw the paddles
-    rectangle(-200, stateP[1], 10, 50)
-    rectangle(190, stateP[2], 10, 50)
 
-    ball.move(aim)
-    x = ball.x
-    y = ball.y
+    # Draw players with white color
+    color('white')
+    rectangle(-200, state[1], 10, 50)
+    rectangle(190, state[2], 10, 50)
 
-    up()
-    goto(x, y)
-    dot(10)
+    # Draw the balls
+    for ball, aim in balls:
+        up()
+        goto(ball.x, ball.y)
+        dot(10, "white")
+
+        # Move the ball
+        ball.move(aim * current_speed)  # Multiply aim by current speed
+        x = ball.x
+        y = ball.y
+
+        # Check if ball touches the wall and bounce
+        if y < -200 or y > 200:
+            aim.y = -aim.y
+
+        # Check if ball touches the left wall
+        if x < -185:
+            if state[1] <= y <= state[1] + 50:
+                aim.x = -aim.x
+            else:
+                score[2] += 1  # Update player 2 score
+                reset_ball(ball, aim)  # Reset ball position and direction
+        # Check if ball touches the right wall
+        if x > 185:
+            if state[2] <= y <= state[2] + 50:
+                aim.x = -aim.x
+            else:
+                score[1] += 1  # Update player 1 score
+                reset_ball(ball, aim)  # Reset ball position and direction
+
+    draw_score()  # Update the score
     update()
+    ontimer(draw, 50)  # Recursive call to keep updating the game
 
-    # Check if the ball hits the top or bottom wall
-    if y < -190 or y > 190:
-        aim.y = -aim.y
+def draw_score():
+    """Draw the score for each player."""
+    up()
+    goto(-35, -180)
+    color('white')
+    write(f"{score[1]}", align="left", font=("Arial", 30, "normal"))
+    goto(30, -180)
+    write(f"{score[2]}", align="left", font=("Arial", 30, "normal"))
+    goto(-45, 155)
+    write(f"PONG", align="left", font=("Arial", 30, "normal"))
 
-    # Check if the ball hits the left wall
-    if x < -199:
-        low = stateS[1]
-        high = stateS[1] + 50
+def reset_ball(ball, aim):
+    """Reset ball position and direction."""
+    ball.x, ball.y = 0, 0
+    aim.x, aim.y = value(), value()
 
-        # Check if the ball is within the paddle's range
-        if low <= y <= high:
-            aim.x = -aim.x
-        else:
-            # Player 2 scores
-            stateS[2] += 1
-            aim.x = -aim.x
+# Function to add a new ball
+def add_ball():
+    balls.append(new_ball())
 
-    # Check if the ball hits the right wall
-    if x > 199:
-        low = stateS[2]
-        high = stateS[2] + 50
+# Function to increase speed
+def increase_speed():
+    global current_speed
+    current_speed += speed_increment
 
-        # Check if the ball is within the paddle's range
-        if low <= y <= high:
-            aim.x = -aim.x
-        else:
-            # Player 1 scores
-            stateS[1] += 1
-            aim.x = -aim.x
-
-    # Check collision with the middle wall
-    if (wall.x - 5 < x < wall.x + 5) and (wall.y - 35 < y < wall.y + 35):
-        aim.x = -aim.x
-
-    # Move the middle wall up and down
-    if wall.y < -150 or wall.y > 150:
-        wall_direction *= -1  # Reverse the movement direction
-    wall.y += wall_direction * 2  # Adjust the speed of the wall
-
-    # Display scores
-    goto(0, 220)
-    write(f"Player 1: {stateS[1]}   Player 2: {stateS[2]}", align="center", font=("Roboto", 14, "bold"))
-
-    ontimer(draw, 50)
-
-
-setup(440, 440, 370, 0)
-title("Pong")
+setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
 listen()
@@ -116,5 +117,7 @@ onkey(lambda: move(1, 20), 'w')
 onkey(lambda: move(1, -20), 's')
 onkey(lambda: move(2, 20), 'i')
 onkey(lambda: move(2, -20), 'k')
+onkey(add_ball, 'space')  # Press spacebar to add a new ball
 draw()
+ontimer(increase_speed, 5000)  # Increase speed every 5 seconds
 done()
