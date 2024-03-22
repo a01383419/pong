@@ -82,8 +82,13 @@ def draw():
 
     draw_score()  # Update the score
     update()
-    ontimer(draw, 50)  # Recursive call to keep updating the game
 
+    # Check if any player has reached 10 points
+    if score[1] >= 10 or score[2] >= 10:
+        end_game()  # Call the function to end the game
+    else:
+        ontimer(draw, 50)  # Recursive call to keep updating the game
+        
 def draw_score():
     """Draw the score for each player."""
     up()
